@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hw.java.mapper.UserMapper">
+    <!--sql片段-->
+    <sql id="uSql">
+        id,name,pwd,email from users
+    </sql>
+
+    <!--插入用户-->
+    <insert id="insert">
+        INSERT INTO users VALUES(null,#{id},#{password},#{email})
+    </insert>
+
+    <!--通过用户名和密码来查询-->
+    <select id="queryByUser" resultMap="umap">
+        select
+        <include refid="uSql"></include>
+        where `NAME`=#{name} and PWD=#{password}
+    </select>
+
+    <!--通过用户名来查询-->
+    <select id="queryByName" resultMap="umap">
+        select
+        <include refid="uSql"></include>
+        where `NAME`= #{name}
+    </select>
+
+    <!--通过id删除用户-->
+    <delete id="delete">
+        DELETE FROM users WHERE id = #{id}
+    </delete>
+
+    <!--根据id更新用户信息-->
+    <update id="update" >
+        UPDATE users
+        <trim prefix="set" suffixOverrides=",">
+           <if test="name!=null">
+               name = #{name},
+           </if>
+            <if test="password!=null">
+                pwd = #{password},
+            </if>
+            <if test="email!=null">
+                email = #{email},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--查询所有用户的信息-->
+    <select id="queryAll" resultMap="umap">
+        select
+        <include refid="uSql"></include>
+    </select>
+
+    <!--通过id查询用户-->
+    <select id="queryById" resultMap="umap">
+        select
+        <include refid="uSql"></include>
+        where id = #{id}
+    </select>
+
+
+    <resultMap id="umap" type="com.hw.java.domain.User">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="pwd" property="password"></result>
+        <result column="email" property="email"></result>
+    </resultMap>
+</mapper>

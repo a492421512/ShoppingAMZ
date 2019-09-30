@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hw.java.mapper.MsgMapper">
+    <!--sql片段-->
+    <sql id="msgSQL">
+        id,sendid,title,msgcontent,state,receiveid,msg_create_date from messages
+    </sql>
+
+    <!--插入短消息-->
+    <insert id="insert">
+        INSERT INTO messages VALUES(null,#{sendId},#{title},#{msgContent},#{state},#{receiveId},#{msgCreateDate})
+    </insert>
+    <!--通过接受者id查询所有短信-->
+    <select id="queryAll" resultMap="mmap">
+        select
+        <include refid="msgSQL"></include>
+        WHERE RECEIVEID = #{receiveId} order by MSG_CREATE_DATE DESC
+    </select>
+    <!--根据编号查询消息-->
+    <select id="query" resultMap="mmap">
+        select
+        <include refid="msgSQL"></include>
+        where id = #{id}
+    </select>
+    <!--根据编号删除信息-->
+    <delete id="delete">
+        DELETE FROM messages WHERE id = #{id}
+    </delete>
+    <!--更新短消息-->
+    <update id="update">
+        update messages SET STATE=0 WHERE id =#{id}
+    </update>
+    <!--分页查询-->
+    <select id="queryLimitMsg" resultMap="mmap">
+        select
+        <include refid="msgSQL"></include>
+        WHERE RECEIVEID = #{receiveId} order by MSG_CREATE_DATE DESC
+    </select>
+
+
+    <resultMap id="mmap" type="com.hw.java.domain.Message">
+        <id column="id" property="id"></id>
+        <result column="sendid" property="sendId"></result>
+        <result column="title" property="title"></result>
+        <result column="msgcontent" property="msgContent"></result>
+        <result column="state" property="state"></result>
+        <result column="receiveid" property="receiveId"></result>
+        <result column="msg_create_date" property="msgCreateDate"></result>
+            <association property="sendUser" javaType="com.hw.java.domain.User"
+                     select="com.hw.java.mapper.UserMapper.queryById" column="sendid" fetchType="eager"></association>
+    </resultMap>
+</mapper>
