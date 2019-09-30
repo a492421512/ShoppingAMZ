@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwua.mapper.ProductCategoryDao">
+    <!--查询一级产品分类-->
+    <select id="queryParent" resultType="com.hwua.entity.ProductCategory">
+      select DISTINCT a1.id,a1.`name`,a1.parent_id
+      FROM amz_product_category a1,amz_product_category a2
+      WHERE a1.id = a2.parent_id
+    </select>
+    <!--查询一级产品分类的id-->
+    <select id="queryParentById" resultType="long">
+        select distinct parent_id from amz_product_category
+    </select>
+    <!--查询二级产品分类-->
+    <select id="querySon" resultType="com.hwua.entity.ProductCategory">
+        select id,name,parent_id from amz_product_category where parent_id = #{id}
+    </select>
+    <!--通过二级ID查询一级ID-->
+    <select id="queryParentId" resultType="long">
+        select parent_id from amz_product_category where id = #{id}
+    </select>
+    <!--通过id查询分类名-->
+    <select id="queryProName" resultType="String">
+        select name from amz_product_category where id = #{id}
+    </select>
+</mapper>

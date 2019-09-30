@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwua.mapper.ShopCartDao">
+    <!--添加购物项-->
+    <insert id="addProduct">
+        insert amz_shop_cart
+        values(null,#{pid},#{pnum},#{uid})
+    </insert>
+    <!--删除购物项-->
+    <delete id="delProduct">
+        delete from amz_shop_cart where id = #{id}
+    </delete>
+    <!--更改商品数量-->
+    <update id="updateNum" >
+        update amz_shop_cart set pnum = #{pnum} where id = #{id}
+    </update>
+    <!--查询购物车-->
+    <select id="showCart" resultMap="shopMap">
+        select id,pid,pnum,uid from amz_shop_cart where uid = #{uid}
+    </select>
+    <!--清空购物车-->
+    <delete id="clearShopCart">
+        delete from amz_shop_cart where uid = #{uid}
+    </delete>
+    <!--查询购物项-->
+    <select id="queryShopCart" resultType="com.hwua.entity.ShopCart">
+        select id,pid,pnum,uid from amz_shop_cart where pid = #{pid} and uid = #{uid}
+    </select>
+    <!--查询购物项-->
+    <select id="queryShopCartById" resultType="com.hwua.entity.ShopCart">
+       select id,pid,pnum,uid from amz_shop_cart where id = #{id}
+    </select>
+    <!--更改用户id-->
+    <update id="updateUid">
+        update amz_shop_cart set uid = #{uid} where uid = 0
+    </update>
+
+    <resultMap id="shopMap" type="com.hwua.entity.ShopCart" >
+        <id  property="id" column="id" ></id>
+        <result property="pid" column="pid"></result>
+        <result property="pnum" column="pnum"></result>
+        <result property="uid" column="uid"></result>
+        <association property="pro" javaType="com.hwua.entity.Product" select="com.hwua.mapper.ProductDao.queryProductById" fetchType="eager" column="pid">
+        </association>
+    </resultMap>
+
+</mapper>

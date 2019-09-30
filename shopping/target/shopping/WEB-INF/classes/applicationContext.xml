@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:content="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--导入文件-->
+<content:property-placeholder location="classpath:druid.properties"/>
+    <!--扫描包-->
+<content:component-scan base-package="com.hwua.service"/>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${JDBC.driverClassName}"></property>
+        <property name="url" value="${JDBC.url}"></property>
+        <property name="username" value="${JDBC.username}"></property>
+        <property name="password" value="${JDBC.password}"></property>
+    </bean>
+
+    <!--整合持久化层,创建代理类-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:mybatisConfig.xml"></property>
+        <property name="plugins" >
+            <array>
+                <!--设置拦截器，在SQL语句后面加上limit-->
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <!--设置参数-->
+                        <value>
+                            reasonable=true<!--分页合理化-->
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <!--map扫描-->
+    <bean id="mapperScan" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.hwua.mapper"></property>
+    </bean>
+
+    <!--事务配置-->
+    <!--配置事务管理器对象-->
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="txManage">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--配置事务通知-->
+    <tx:advice id="txAdvice" transaction-manager="txManage"></tx:advice>
+    <!--配置aop-->
+    <aop:config>
+        <!--配置切入点 -->
+        <aop:pointcut id="p1" expression="execution(* com.hwua.service..*.*(..))"></aop:pointcut>
+        <!--事务通知匹配切入点-->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="p1"></aop:advisor>
+    </aop:config>
+</beans>

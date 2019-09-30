@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwua.mapper.OrderDetailDao">
+    <!--查询订单明细-->
+    <select id="queryOrderDetailByOid" resultType="com.hwua.entity.OrderDetail">
+        select id,oid,pid,quantity,money from amz_order_detail where oid = #{oid}
+    </select>
+
+    <!--添加订单明细-->
+    <insert id="insertOrderDetail">
+        insert amz_order_detail
+        values(null,#{oid},#{pid},#{quantity},#{money})
+    </insert>
+
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwua.mapper.OrderDao">
+    <!--根据用户id查询订单明细-->
+    <select id="queryOrderByUid" resultType="com.hwua.entity.Order">
+        select * from amz_order where uid = #{uid} order by create_time desc
+    </select>
+
+    <!--添加订单明细-->
+    <insert id="insertOrder">
+        insert into amz_order
+        values(null,#{uid},#{uname},#{uaddress},#{create_time},#{money},1,1)
+    </insert>
+</mapper>

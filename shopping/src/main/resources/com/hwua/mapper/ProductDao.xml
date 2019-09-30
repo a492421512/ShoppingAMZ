@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hwua.mapper.ProductDao">
+
+    <sql id="productSQL">
+        id,name,description,price,stock,major_id,minor_id,img_source from amz_product
+    </sql>
+    <!--查询所有商品-->
+    <select id="queryAllProduct" resultType="com.hwua.entity.Product">
+        select
+        <include refid="productSQL"></include>
+    </select>
+    <!--查询最多库存的商品-->
+    <select id="queryMaxProduct" resultType="com.hwua.entity.Product">
+        select
+        <include refid="productSQL"></include>
+        order by stock desc limit 0,6
+    </select>
+    <!--分页查询-->
+    <select id="queryProductLimit" resultType="com.hwua.entity.Product">
+        select
+        <include refid="productSQL"></include>
+    </select>
+    <!--通过id查询-->
+    <select id="queryProductById" resultType="com.hwua.entity.Product">
+        select
+        <include refid="productSQL"></include>
+        where id = #{id}
+    </select>
+    <!--通过一级id查询-->
+    <select id="queryProByParentId" resultType="com.hwua.entity.Product">
+        select
+        <include refid="productSQL"></include>
+        where id = #{major_id}
+    </select>
+    <!--通过二级ID查询商品-->
+    <select id="queryProBySonId" resultType="com.hwua.entity.Product">
+        select
+        <include refid="productSQL"></include>
+        where id = #{minor_id}
+    </select>
+    <!--通过字段模糊查询-->
+    <select id="queryLikeByName" resultType="com.hwua.entity.Product">
+        select
+        <include refid="productSQL"></include>
+        where name like "%"#{name}"%"
+    </select>
+    <!--更改对应的库存-->
+    <update id="delProStock">
+        UPDATE amz_product SET stock = #{pnum} WHERE id = #{id}
+    </update>
+</mapper>
