@@ -1,0 +1,11 @@
+server:
+  port: 9999
+  servlet:
+    context-path: /msg
+
+
+jdbc:
+  driverClassName: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://127.0.0.1:3306/d_one?useSSL=false&serverTimezone=UTC
+  username: root
+  password: root

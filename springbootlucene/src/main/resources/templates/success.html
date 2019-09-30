@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>短信标题</th>
+            <th>短信内容</th>
+        </tr>
+    </table>
+    <tbody>
+        <tr th:each="document:${list}">
+            <td th:text="${document.get('msgTitle')}"></td>
+            <td>--------------</td>
+            <td th:text="${document.get('msgContent')}"></td>
+            <br>
+        </tr>
+    </tbody>
+</body>
+</html>
